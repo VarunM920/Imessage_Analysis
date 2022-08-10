@@ -1,0 +1,14 @@
+--get message type with person who reacted and who they reacted to
+select m.associated_message_type, n.name as nameofreactor, n2.name as nameofreactee
+from message m
+join handle h on h.rowid = m.handle_id -- joins message with who sent it
+join message p on m.associated_message_guid = 'p:0/'||p.guid --joins the reaction to the text that it is reacting to
+join handle h2 on h2.rowid = p.handle_id -- joins the reaction data to the person
+left join name n on n.number = h.id -- joins the number of the person with their name
+left join name n2 on n2.number = h2.id -- same thing as ealier except for reaction
+join chat_message_join cmj on cmj.message_id = m.ROWID --joins the chat id so we can filter specific chats
+--join react_join rj on rj.id = m.associated_message_type
+
+where cmj.chat_id = 903
+
+order by m.date desc
